@@ -23,6 +23,14 @@ func NewErrorHandler(log *slog.Logger) fiber.ErrorHandler {
 			})
 		}
 
+		// Checked before the sentinel switch: this one carries a message that
+		// must reach the client verbatim, so it cannot be collapsed into a
+		// generic status string.
+		var rejected *apperr.RejectedError
+		if errors.As(err, &rejected) {
+			return respond(ctx, fiber.StatusUnprocessableEntity, rejected.Reason)
+		}
+
 		switch {
 		case errors.Is(err, apperr.ErrNotFound):
 			return respond(ctx, fiber.StatusNotFound, "resource not found")
@@ -32,6 +40,8 @@ func NewErrorHandler(log *slog.Logger) fiber.ErrorHandler {
 			return respond(ctx, fiber.StatusUnauthorized, "unauthorized")
 		case errors.Is(err, apperr.ErrForbidden):
 			return respond(ctx, fiber.StatusForbidden, "forbidden")
+		case errors.Is(err, apperr.ErrUnavailable):
+			return respond(ctx, fiber.StatusServiceUnavailable, "upstream service unavailable")
 		}
 
 		var fiberErr *fiber.Error

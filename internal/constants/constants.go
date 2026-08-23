@@ -40,7 +40,11 @@ const (
 	HTTPReadTimeout  = 15 * time.Second
 	HTTPWriteTimeout = 30 * time.Second
 	HTTPIdleTimeout  = 60 * time.Second
-	HTTPBodyLimit    = 4 * 1024 * 1024
+	// Must exceed MaxAudioUploadBytes plus multipart framing. At the old 4 MiB
+	// a 120-second calibration clip (3.84 MB of 16 kHz 16-bit mono) left 354 KB
+	// of headroom and none at all for a phone recording at 44.1 kHz or stereo:
+	// fiber rejected the upload before any handler ran.
+	HTTPBodyLimit = 20 * 1024 * 1024
 )
 
 // Timeouts applied while establishing infrastructure connections at startup.
@@ -74,8 +78,73 @@ const (
 	DefaultBcryptCost      = 12
 	DefaultShutdownTimeout = 15 * time.Second
 	DefaultCORSOrigins     = "*"
+
+	// A cold CPU forward pass over ~119 calibration windows dominates this.
+	DefaultAITimeout     = 120 * time.Second
+	DefaultStorageBucket = "audiax-audio"
 )
 
 // EnvProduction is the APP_ENV value that switches on production behaviour:
 // JSON logs, no stack traces in responses.
 const EnvProduction = "production"
+
+// Health card statuses, mirroring ai/decision.py. These are a wire format
+// shared with the AI service: renaming one breaks the CHECK constraint on
+// inspections.status and every stored row that used the old spelling.
+const (
+	StatusNormal       = "NORMAL"
+	StatusWarning      = "WARNING"
+	StatusCritical     = "CRITICAL"
+	StatusUncalibrated = "KALIBRASI_KURANG"
+)
+
+// Calibration quality values, mirroring ai/calibration.py.
+const (
+	CalibrationQualityGood = "baik"
+	CalibrationQualityLow  = "rendah"
+)
+
+// EmbeddingDtypeFloat16 is the only dtype MachineBaseline emits. The size CHECK
+// on baselines assumes 2 bytes per element, so a different dtype must fail loudly.
+const EmbeddingDtypeFloat16 = "float16"
+
+// TriageDisclaimer mirrors DISCLAIMER in ai/decision.py. It is not stored per
+// inspection (docs/erd.md §6); the backend attaches it when building a response.
+// Live inspections echo the value the AI service returned; history rows use this
+// constant, so the two must stay identical.
+const TriageDisclaimer = "Alat bantu triase, bukan diagnosis mengikat -- tetap perlu inspeksi teknisi."
+
+// Audio upload handling.
+const (
+	// AudioFormField is the multipart field name both this API and the AI
+	// service use for the audio file.
+	AudioFormField = "audio"
+	// MaxAudioUploadBytes bounds a single upload. 120 s of 16 kHz 16-bit mono
+	// is 3.84 MB; the margin covers phones that record at 44.1 kHz or stereo.
+	MaxAudioUploadBytes = 16 * 1024 * 1024
+	// Object key prefixes inside the storage bucket.
+	CalibrationAudioPrefix = "calibrations/"
+	InspectionAudioPrefix  = "inspections/"
+	// AudioContentType is what the storage client declares on upload.
+	AudioContentType = "audio/wav"
+	// StorageTimeout bounds one object upload. Deliberately far shorter than
+	// DefaultAITimeout: a PUT of a few megabytes that has not finished in 30 s
+	// is not going to, and a user is already waiting on the request.
+	StorageTimeout = 30 * time.Second
+)
+
+// AI service endpoints, from audiax_model/service/main.py.
+const (
+	AICalibratePath = "/v1/calibrate"
+	AIInspectPath   = "/v1/inspect"
+	AIHealthPath    = "/healthz"
+	// AIBaselineFormField is the form field /v1/inspect expects the serialised
+	// baseline in.
+	AIBaselineFormField = "baseline_json"
+	// AIMachineLabelFormField is the form field /v1/calibrate expects the
+	// operator's machine label in.
+	AIMachineLabelFormField = "machine_label"
+)
+
+// InspectionHistoryLimit caps how many inspections one history request returns.
+const InspectionHistoryLimit = 100

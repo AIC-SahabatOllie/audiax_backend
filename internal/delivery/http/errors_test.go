@@ -29,7 +29,9 @@ func TestErrorHandlerMapsDomainErrorsToStatuses(t *testing.T) {
 		{"conflict", apperr.ErrConflict, fiber.StatusConflict, "resource already exists"},
 		{"unauthorized", apperr.ErrUnauthorized, fiber.StatusUnauthorized, "unauthorized"},
 		{"forbidden", apperr.ErrForbidden, fiber.StatusForbidden, "forbidden"},
+		{"unavailable", apperr.ErrUnavailable, fiber.StatusServiceUnavailable, "upstream service unavailable"},
 		{"wrapped sentinel", fmt.Errorf("find user: %w", apperr.ErrNotFound), fiber.StatusNotFound, "resource not found"},
+		{"wrapped unavailable", fmt.Errorf("call ai: %w", apperr.ErrUnavailable), fiber.StatusServiceUnavailable, "upstream service unavailable"},
 		{"fiber error", fiber.NewError(fiber.StatusBadRequest, "malformed request body"), fiber.StatusBadRequest, "malformed request body"},
 		{"unknown error", fmt.Errorf("connection reset by peer"), fiber.StatusInternalServerError, "internal server error"},
 	}
@@ -64,6 +66,28 @@ func TestErrorHandlerReportsEachInvalidField(t *testing.T) {
 	assert.Equal(t, "validation failed", body.Error)
 	assert.Equal(t, "must be a valid email address", body.Fields["email"])
 	assert.Equal(t, "must be at least 8 characters", body.Fields["password"])
+}
+
+// A rejection from the AI quality gate carries the only text that tells the
+// operator what to do differently. Swallowing it and returning a bare status
+// would leave them re-recording at random.
+func TestErrorHandlerSurfacesRejectionReason(t *testing.T) {
+	reason := "Audio kalibrasi tidak lolos quality gate (terlalu senyap). Rekam ulang lebih dekat ke mesin."
+
+	status, body := do(t, &apperr.RejectedError{Reason: reason})
+
+	assert.Equal(t, fiber.StatusUnprocessableEntity, status)
+	assert.Equal(t, reason, body.Error)
+	assert.Empty(t, body.Fields)
+}
+
+func TestErrorHandlerSurfacesWrappedRejectionReason(t *testing.T) {
+	reason := "Mesin ini belum dikalibrasi."
+
+	status, body := do(t, fmt.Errorf("inspect: %w", &apperr.RejectedError{Reason: reason}))
+
+	assert.Equal(t, fiber.StatusUnprocessableEntity, status)
+	assert.Equal(t, reason, body.Error)
 }
 
 func do(t *testing.T, err error) (int, model.ErrorResponse) {
