@@ -7,9 +7,10 @@ import (
 )
 
 type RouteConfig struct {
-	App            *fiber.App
-	UserController *http.UserController
-	AuthMiddleware fiber.Handler
+	App               *fiber.App
+	UserController    *http.UserController
+	MachineController *http.MachineController
+	AuthMiddleware    fiber.Handler
 }
 
 func (c *RouteConfig) Setup() {
@@ -36,4 +37,10 @@ func (c *RouteConfig) setupAuthRoutes(api fiber.Router) {
 	authed.Get("/users/_current", c.UserController.Current)
 	authed.Patch("/users/_current", c.UserController.Update)
 	authed.Delete("/users/_current", c.UserController.Logout)
+
+	authed.Post("/machines", c.MachineController.Create)
+	authed.Get("/machines", c.MachineController.List)
+	authed.Get("/machines/:machineId", c.MachineController.Get)
+	authed.Patch("/machines/:machineId", c.MachineController.Update)
+	authed.Delete("/machines/:machineId", c.MachineController.Delete)
 }
