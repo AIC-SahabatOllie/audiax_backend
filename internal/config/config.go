@@ -32,6 +32,13 @@ type Config struct {
 
 	RedisURL string
 
+	AIServiceURL string
+	AITimeout    time.Duration
+
+	SupabaseURL        string
+	SupabaseServiceKey string
+	StorageBucket      string
+
 	SessionTTL time.Duration
 	BcryptCost int
 
@@ -60,6 +67,15 @@ func Load() (*Config, error) {
 
 		RedisURL: os.Getenv("REDIS_URL"),
 
+		// Trailing slashes are trimmed here so path concatenation downstream
+		// never produces a double slash.
+		AIServiceURL: strings.TrimRight(os.Getenv("AI_SERVICE_URL"), "/"),
+		AITimeout:    envDuration("AI_TIMEOUT", constants.DefaultAITimeout),
+
+		SupabaseURL:        strings.TrimRight(os.Getenv("SUPABASE_URL"), "/"),
+		SupabaseServiceKey: os.Getenv("SUPABASE_SERVICE_KEY"),
+		StorageBucket:      env("STORAGE_BUCKET", constants.DefaultStorageBucket),
+
 		SessionTTL: envDuration("SESSION_TTL", constants.DefaultSessionTTL),
 		BcryptCost: envInt("BCRYPT_COST", constants.DefaultBcryptCost),
 
@@ -72,6 +88,15 @@ func Load() (*Config, error) {
 	}
 	if cfg.RedisURL == "" {
 		return nil, errors.New("REDIS_URL is required")
+	}
+	if cfg.AIServiceURL == "" {
+		return nil, errors.New("AI_SERVICE_URL is required")
+	}
+	if cfg.SupabaseURL == "" {
+		return nil, errors.New("SUPABASE_URL is required")
+	}
+	if cfg.SupabaseServiceKey == "" {
+		return nil, errors.New("SUPABASE_SERVICE_KEY is required")
 	}
 	return cfg, nil
 }
