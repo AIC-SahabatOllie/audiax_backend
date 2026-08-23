@@ -76,7 +76,7 @@ func (u *UserUseCase) Register(ctx context.Context, request *model.RegisterUserR
 	request.Email = normaliseEmail(request.Email)
 	request.Name = strings.TrimSpace(request.Name)
 
-	if err := u.validateStruct(request); err != nil {
+	if err := validateStruct(u.validate, request); err != nil {
 		return nil, err
 	}
 
@@ -109,7 +109,7 @@ func (u *UserUseCase) Register(ctx context.Context, request *model.RegisterUserR
 func (u *UserUseCase) Login(ctx context.Context, request *model.LoginUserRequest) (*model.SessionResponse, error) {
 	request.Email = normaliseEmail(request.Email)
 
-	if err := u.validateStruct(request); err != nil {
+	if err := validateStruct(u.validate, request); err != nil {
 		return nil, err
 	}
 
@@ -160,7 +160,7 @@ func (u *UserUseCase) Current(ctx context.Context, userID string) (*model.UserRe
 }
 
 func (u *UserUseCase) Update(ctx context.Context, request *model.UpdateUserRequest) (*model.UserResponse, error) {
-	if err := u.validateStruct(request); err != nil {
+	if err := validateStruct(u.validate, request); err != nil {
 		return nil, err
 	}
 
@@ -208,46 +208,6 @@ func (u *UserUseCase) Update(ctx context.Context, request *model.UpdateUserReque
 
 func (u *UserUseCase) Logout(ctx context.Context, token string) error {
 	return u.sessions.Delete(ctx, token)
-}
-
-// validateStruct turns validator's error list into an apperr.ValidationError so
-// the client is told which field failed and why.
-func (u *UserUseCase) validateStruct(request any) error {
-	err := u.validate.Struct(request)
-	if err == nil {
-		return nil
-	}
-
-	var invalid *validator.InvalidValidationError
-	if errors.As(err, &invalid) {
-		return fmt.Errorf("validate: %w", err)
-	}
-
-	var fieldErrors validator.ValidationErrors
-	if !errors.As(err, &fieldErrors) {
-		return fmt.Errorf("validate: %w", err)
-	}
-
-	fields := make(map[string]string, len(fieldErrors))
-	for _, fe := range fieldErrors {
-		fields[fe.Field()] = describe(fe)
-	}
-	return &apperr.ValidationError{Fields: fields}
-}
-
-func describe(fe validator.FieldError) string {
-	switch fe.Tag() {
-	case "required":
-		return "is required"
-	case "email":
-		return "must be a valid email address"
-	case "min":
-		return "must be at least " + fe.Param() + " characters"
-	case "max":
-		return "must be at most " + fe.Param() + " characters"
-	default:
-		return "failed the " + fe.Tag() + " rule"
-	}
 }
 
 func normaliseEmail(email string) string {
