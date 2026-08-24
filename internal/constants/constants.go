@@ -85,6 +85,16 @@ const (
 	// calibration recording close. 240s leaves headroom for a colder cache.
 	DefaultAITimeout     = 240 * time.Second
 	DefaultStorageBucket = "audiax-audio"
+
+	// DefaultAdvisoryTimeout is deliberately far shorter than DefaultAITimeout:
+	// BEATs inference is slow by nature, but a 220-token reply from a ~1B
+	// model that has not finished in 5s will not finish, and an operator is
+	// waiting on the request. Past this, StaticReply answers instead
+	// (DESIGN.md decision 8) -- the feature degrades, it never hangs.
+	DefaultAdvisoryTimeout = 5 * time.Second
+	// DefaultOllamaURL is the service name docker-compose gives the Ollama
+	// container (DESIGN.md §3.6); override with OLLAMA_URL for local dev.
+	DefaultOllamaURL = "http://ollama:11434"
 )
 
 // EnvProduction is the APP_ENV value that switches on production behaviour:
@@ -175,4 +185,38 @@ var AdvisoryForbiddenDiagnosisPhrases = []string{
 	"disebabkan oleh",
 	"sisa umur",
 	"akan rusak dalam",
+}
+
+// Advisory LLM client (Ollama) and response contract, mirroring DESIGN.md §3.6.
+const (
+	OllamaChatPath  = "/api/chat"
+	OllamaModelName = "audiax-advisor"
+	// AdvisoryNumPredict caps completion length; paired with
+	// DefaultAdvisoryTimeout so a slow model degrades to StaticReply instead
+	// of making the operator wait.
+	AdvisoryNumPredict = 220
+
+	// AdvisoryZWarningThreshold / AdvisoryZCriticalThreshold mirror the frozen
+	// z_warning / z_critical in audiax_model/ai/config.py. docs/erd.md §5.4 is
+	// explicit that these stay static and out of the database -- one source
+	// of truth -- so this is the same mirror-not-fetch pattern as
+	// StatusNormal and friends, not a value this backend owns.
+	AdvisoryZWarningThreshold  = 3.0
+	AdvisoryZCriticalThreshold = 6.0
+
+	// AdvisorySourceLLM / AdvisorySourceFallbackStatic are the "source" values
+	// DESIGN.md §3.4 requires the client to always display: degradation must
+	// be visible, never silent.
+	AdvisorySourceLLM            = "llm"
+	AdvisorySourceFallbackStatic = "fallback_static"
+)
+
+// DangerKeywords force the CRITICAL path deterministically, before the LLM is
+// ever asked (DESIGN.md §3.5): matched case-insensitively against the
+// operator's own message text. A match wins regardless of the acoustic
+// status -- the LLM is never involved in that decision.
+var DangerKeywords = []string{
+	"bau gosong", "bau terbakar", "asap", "berasap", "percikan", "api",
+	"panas berlebih", "sangat panas", "getaran keras", "bergetar hebat",
+	"bunyi ledakan", "macet", "tersendat",
 }

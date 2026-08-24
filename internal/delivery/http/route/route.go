@@ -1,6 +1,7 @@
 package route
 
 import (
+	"audiax/internal/advisory"
 	"audiax/internal/delivery/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,12 +13,20 @@ type RouteConfig struct {
 	MachineController    *http.MachineController
 	BaselineController   *http.BaselineController
 	InspectionController *http.InspectionController
+	AdvisoryController   *http.AdvisoryController
 	AuthMiddleware       fiber.Handler
 }
 
 func (c *RouteConfig) Setup() {
 	c.App.Get("/healthz", func(ctx *fiber.Ctx) error {
-		return ctx.JSON(fiber.Map{"status": "ok"})
+		// prompt_template_hash is PROMPT_CONTRACT.md's anti-skew check: Track
+		// B records the template hash it trained against in corpus/meta.json,
+		// and the Fase 5 evaluation harness must fail hard if this no longer
+		// matches it, not just warn.
+		return ctx.JSON(fiber.Map{
+			"status":               "ok",
+			"prompt_template_hash": advisory.TemplateHash,
+		})
 	})
 
 	api := c.App.Group("/api")
@@ -51,4 +60,6 @@ func (c *RouteConfig) setupAuthRoutes(api fiber.Router) {
 
 	authed.Post("/machines/:machineId/inspections", c.InspectionController.Inspect)
 	authed.Get("/machines/:machineId/inspections", c.InspectionController.List)
+
+	authed.Post("/machines/:machineId/inspections/:inspectionId/advisory/messages", c.AdvisoryController.Send)
 }
