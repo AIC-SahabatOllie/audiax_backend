@@ -52,6 +52,7 @@ func New(deps Dependencies) *fiber.App {
 	sessionRepository := repository.NewSessionRepository(deps.Redis)
 	machineRepository := repository.NewMachineRepository()
 	baselineRepository := repository.NewBaselineRepository()
+	inspectionRepository := repository.NewInspectionRepository()
 	aiService := config.NewAIService(cfg.AIServiceURL, cfg.AITimeout)
 	objectStore := config.NewObjectStore(cfg.SupabaseURL, cfg.SupabaseServiceKey, cfg.StorageBucket, constants.StorageTimeout)
 
@@ -67,13 +68,19 @@ func New(deps Dependencies) *fiber.App {
 		deps.DB, deps.Log, config.NewValidator(),
 		machineRepository, baselineRepository, aiService, objectStore,
 	)
+	inspectionUseCase := usecase.NewInspectionUseCase(
+		deps.DB, deps.Log, config.NewValidator(),
+		machineRepository, baselineRepository, inspectionRepository,
+		aiService, objectStore,
+	)
 
 	routes := route.RouteConfig{
-		App:                app,
-		UserController:     deliveryhttp.NewUserController(userUseCase),
-		MachineController:  deliveryhttp.NewMachineController(machineUseCase),
-		BaselineController: deliveryhttp.NewBaselineController(baselineUseCase),
-		AuthMiddleware:     middleware.NewAuth(userUseCase),
+		App:                  app,
+		UserController:       deliveryhttp.NewUserController(userUseCase),
+		MachineController:    deliveryhttp.NewMachineController(machineUseCase),
+		BaselineController:   deliveryhttp.NewBaselineController(baselineUseCase),
+		InspectionController: deliveryhttp.NewInspectionController(inspectionUseCase),
+		AuthMiddleware:       middleware.NewAuth(userUseCase),
 	}
 	routes.Setup()
 
