@@ -1,0 +1,594 @@
+{
+  "schema_version": "1.0",
+  "cells": [
+    {
+      "key": "NORMAL|*|*|*",
+      "urgency": "tidak_perlu_tindakan",
+      "safety_gate": "",
+      "checklist": [],
+      "escalate_if": "Tidak ada tindakan yang diperlukan sekarang. Tetap perhatikan mesin secara berkala dan lakukan inspeksi rutin berikutnya seperti biasa.",
+      "recheck_hours": 720,
+      "needs_technician": false
+    },
+    {
+      "key": "KALIBRASI_KURANG|*|*|*",
+      "urgency": "kalibrasi_ulang_diperlukan",
+      "safety_gate": "",
+      "checklist": [
+        "Rekam ulang suara mesin selama sekitar 2 menit saat mesin menyala normal, di lokasi yang sama seperti kalibrasi pertama.",
+        "Pastikan tidak ada suara bising dari luar (radio, orang bicara keras, alat lain) saat merekam.",
+        "Pastikan mesin dalam kondisi yang diyakini sehat saat merekam ulang - jangan kalibrasi mesin yang sedang bermasalah."
+      ],
+      "escalate_if": "Kalau setelah dikalibrasi ulang hasilnya tetap KALIBRASI_KURANG, hubungi dukungan teknis aplikasi - ini bukan masalah pada mesin.",
+      "recheck_hours": 0,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|*|*|*",
+      "urgency": "rencanakan_dalam_24_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi asing dibanding biasanya?",
+        "Lihat sekeliling mesin: ada tanda getaran tidak wajar, kotoran menumpuk, atau bagian yang longgar?"
+      ],
+      "escalate_if": "Informasi indikator dari sistem tidak lengkap untuk kasus ini - percayakan pemeriksaan detail ke teknisi walau checklist di atas terlihat normal.",
+      "recheck_hours": 24,
+      "needs_technician": true
+    },
+    {
+      "key": "CRITICAL|*|*|*",
+      "urgency": "segera",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Lihat sekeliling mesin: ada tanda asap, bau gosong, atau kerusakan yang terlihat jelas?"
+      ],
+      "escalate_if": "Informasi indikator dari sistem tidak lengkap untuk kasus ini - jangan nyalakan mesin lagi, tunggu teknisi memeriksa.",
+      "recheck_hours": 0,
+      "needs_technician": true
+    },
+    {
+      "key": "WARNING|kurtosis|belt|*",
+      "urgency": "rencanakan_dalam_7_hari",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi status mesin masih WARNING pada inspeksi minggu depan, panggil teknisi.",
+      "recheck_hours": 168,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|kurtosis|direct-coupled|*",
+      "urgency": "rencanakan_dalam_7_hari",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi status mesin masih WARNING pada inspeksi minggu depan, panggil teknisi.",
+      "recheck_hours": 168,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|kurtosis|direct-drive|*",
+      "urgency": "rencanakan_dalam_7_hari",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi status mesin masih WARNING pada inspeksi minggu depan, panggil teknisi.",
+      "recheck_hours": 168,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|crest_factor|belt|*",
+      "urgency": "rencanakan_dalam_7_hari",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi status mesin masih WARNING pada inspeksi minggu depan, panggil teknisi.",
+      "recheck_hours": 168,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|crest_factor|direct-coupled|*",
+      "urgency": "rencanakan_dalam_7_hari",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi status mesin masih WARNING pada inspeksi minggu depan, panggil teknisi.",
+      "recheck_hours": 168,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|crest_factor|direct-drive|*",
+      "urgency": "rencanakan_dalam_7_hari",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi status mesin masih WARNING pada inspeksi minggu depan, panggil teknisi.",
+      "recheck_hours": 168,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|spectral_centroid|belt|*",
+      "urgency": "rencanakan_dalam_7_hari",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi status mesin masih WARNING pada inspeksi minggu depan, panggil teknisi.",
+      "recheck_hours": 168,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|spectral_centroid|direct-coupled|*",
+      "urgency": "rencanakan_dalam_7_hari",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi status mesin masih WARNING pada inspeksi minggu depan, panggil teknisi.",
+      "recheck_hours": 168,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|spectral_centroid|direct-drive|*",
+      "urgency": "rencanakan_dalam_7_hari",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi status mesin masih WARNING pada inspeksi minggu depan, panggil teknisi.",
+      "recheck_hours": 168,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|kurtosis|belt|>6bln",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|kurtosis|direct-coupled|>6bln",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|kurtosis|direct-drive|>6bln",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|crest_factor|belt|>6bln",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|crest_factor|direct-coupled|>6bln",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|crest_factor|direct-drive|>6bln",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|spectral_centroid|belt|>6bln",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|spectral_centroid|direct-coupled|>6bln",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|spectral_centroid|direct-drive|>6bln",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|kurtosis|belt|tidak-tahu",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Riwayat perawatan mesin ini tidak diketahui, jadi diperlakukan seolah sudah lama tidak dirawat. Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|kurtosis|direct-coupled|tidak-tahu",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Riwayat perawatan mesin ini tidak diketahui, jadi diperlakukan seolah sudah lama tidak dirawat. Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|kurtosis|direct-drive|tidak-tahu",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Riwayat perawatan mesin ini tidak diketahui, jadi diperlakukan seolah sudah lama tidak dirawat. Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|crest_factor|belt|tidak-tahu",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Riwayat perawatan mesin ini tidak diketahui, jadi diperlakukan seolah sudah lama tidak dirawat. Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|crest_factor|direct-coupled|tidak-tahu",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Riwayat perawatan mesin ini tidak diketahui, jadi diperlakukan seolah sudah lama tidak dirawat. Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|crest_factor|direct-drive|tidak-tahu",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Riwayat perawatan mesin ini tidak diketahui, jadi diperlakukan seolah sudah lama tidak dirawat. Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|spectral_centroid|belt|tidak-tahu",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Riwayat perawatan mesin ini tidak diketahui, jadi diperlakukan seolah sudah lama tidak dirawat. Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|spectral_centroid|direct-coupled|tidak-tahu",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Riwayat perawatan mesin ini tidak diketahui, jadi diperlakukan seolah sudah lama tidak dirawat. Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "WARNING|spectral_centroid|direct-drive|tidak-tahu",
+      "urgency": "rencanakan_dalam_48_jam",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Riwayat perawatan mesin ini tidak diketahui, jadi diperlakukan seolah sudah lama tidak dirawat. Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.",
+      "recheck_hours": 48,
+      "needs_technician": false
+    },
+    {
+      "key": "CRITICAL|kurtosis|belt|*",
+      "urgency": "segera",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Status sudah CRITICAL - jangan nyalakan mesin lagi walau checklist di atas terlihat normal. Tunggu teknisi memeriksa sebelum mesin dioperasikan kembali.",
+      "recheck_hours": 0,
+      "needs_technician": true
+    },
+    {
+      "key": "CRITICAL|kurtosis|direct-coupled|*",
+      "urgency": "segera",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Status sudah CRITICAL - jangan nyalakan mesin lagi walau checklist di atas terlihat normal. Tunggu teknisi memeriksa sebelum mesin dioperasikan kembali.",
+      "recheck_hours": 0,
+      "needs_technician": true
+    },
+    {
+      "key": "CRITICAL|kurtosis|direct-drive|*",
+      "urgency": "segera",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Dengarkan dari jarak aman saat mesin dinyalakan sebentar: ada bunyi 'klik' atau 'ketuk' berulang?"
+      ],
+      "escalate_if": "Status sudah CRITICAL - jangan nyalakan mesin lagi walau checklist di atas terlihat normal. Tunggu teknisi memeriksa sebelum mesin dioperasikan kembali.",
+      "recheck_hours": 0,
+      "needs_technician": true
+    },
+    {
+      "key": "CRITICAL|crest_factor|belt|*",
+      "urgency": "segera",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Status sudah CRITICAL - jangan nyalakan mesin lagi walau checklist di atas terlihat normal. Tunggu teknisi memeriksa sebelum mesin dioperasikan kembali.",
+      "recheck_hours": 0,
+      "needs_technician": true
+    },
+    {
+      "key": "CRITICAL|crest_factor|direct-coupled|*",
+      "urgency": "segera",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Status sudah CRITICAL - jangan nyalakan mesin lagi walau checklist di atas terlihat normal. Tunggu teknisi memeriksa sebelum mesin dioperasikan kembali.",
+      "recheck_hours": 0,
+      "needs_technician": true
+    },
+    {
+      "key": "CRITICAL|crest_factor|direct-drive|*",
+      "urgency": "segera",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Status sudah CRITICAL - jangan nyalakan mesin lagi walau checklist di atas terlihat normal. Tunggu teknisi memeriksa sebelum mesin dioperasikan kembali.",
+      "recheck_hours": 0,
+      "needs_technician": true
+    },
+    {
+      "key": "CRITICAL|spectral_centroid|belt|*",
+      "urgency": "segera",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.",
+        "Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.",
+        "Cek baut dudukan motor dan blower, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Status sudah CRITICAL - jangan nyalakan mesin lagi walau checklist di atas terlihat normal. Tunggu teknisi memeriksa sebelum mesin dioperasikan kembali.",
+      "recheck_hours": 0,
+      "needs_technician": true
+    },
+    {
+      "key": "CRITICAL|spectral_centroid|direct-coupled|*",
+      "urgency": "segera",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa kopling karet penghubung poros motor dan blower: retak atau aus?",
+        "Putar poros dengan tangan (mesin mati): terasa seret, goyang, atau tidak rata?",
+        "Cek baut dudukan motor, blower, dan kopling, kencangkan yang longgar.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Status sudah CRITICAL - jangan nyalakan mesin lagi walau checklist di atas terlihat normal. Tunggu teknisi memeriksa sebelum mesin dioperasikan kembali.",
+      "recheck_hours": 0,
+      "needs_technician": true
+    },
+    {
+      "key": "CRITICAL|spectral_centroid|direct-drive|*",
+      "urgency": "segera",
+      "safety_gate": "Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.",
+      "checklist": [
+        "Periksa baut dudukan unit motor-blower, kencangkan yang longgar.",
+        "Lihat kipas/impeler dari luar (mesin mati): ada kotoran, debu tebal, atau benda asing yang menempel?",
+        "Bersihkan kisi ventilasi pendingin motor dari debu.",
+        "Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?",
+        "Cium dari jarak aman (mesin mati): ada bau gosong atau hangus di sekitar motor?",
+        "Raba rumah motor (mesin mati): apakah terasa lebih panas dari biasanya?"
+      ],
+      "escalate_if": "Status sudah CRITICAL - jangan nyalakan mesin lagi walau checklist di atas terlihat normal. Tunggu teknisi memeriksa sebelum mesin dioperasikan kembali.",
+      "recheck_hours": 0,
+      "needs_technician": true
+    }
+  ]
+}
