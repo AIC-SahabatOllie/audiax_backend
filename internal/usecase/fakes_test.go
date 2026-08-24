@@ -208,3 +208,26 @@ func (f *fakeObjectStore) Put(_ context.Context, path string, content []byte, _ 
 	f.puts[path] = content
 	return nil
 }
+
+// --- inspection repository -------------------------------------------------
+
+type fakeInspectionRepo struct {
+	rows []*entity.Inspection
+}
+
+func newFakeInspectionRepo() *fakeInspectionRepo { return &fakeInspectionRepo{} }
+
+func (f *fakeInspectionRepo) Create(_ *gorm.DB, inspection *entity.Inspection) error {
+	copied := *inspection
+	f.rows = append(f.rows, &copied)
+	return nil
+}
+
+func (f *fakeInspectionRepo) ListForMachine(_ *gorm.DB, inspections *[]entity.Inspection, machineID string, limit int) error {
+	for _, row := range f.rows {
+		if row.MachineID == machineID && len(*inspections) < limit {
+			*inspections = append(*inspections, *row)
+		}
+	}
+	return nil
+}
