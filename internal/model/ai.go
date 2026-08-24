@@ -29,12 +29,6 @@ type AIBaseline struct {
 // ZScore, HealthScore, DominantIndicator and Reason are pointers because the AI
 // service returns null for each of them on legitimate paths: a non-finite z on
 // KALIBRASI_KURANG, no dominant indicator on NORMAL, no reason otherwise.
-//
-// HealthScore and Reason are additionally absent from the response
-// audiax_model/service/main.py builds today: it assembles the body by hand and
-// drops both, even though decision.py documents HealthCard.to_dict() as the
-// shape /v1/inspect returns. Pointers keep this client correct either way, and
-// both fields stay null until that service is fixed.
 type AIHealthCard struct {
 	Status             string   `json:"status"`
 	ZScore             *float64 `json:"z_score"`

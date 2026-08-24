@@ -107,6 +107,22 @@ make docker  # distroless image
 | `GET` | `/api/users/_current` | Bearer | `200` user |
 | `PATCH` | `/api/users/_current` | Bearer | `200` user |
 | `DELETE` | `/api/users/_current` | Bearer | `204` |
+| `POST` | `/api/machines` | Bearer | `201` machine |
+| `GET` | `/api/machines` | Bearer | `200` machines |
+| `GET` | `/api/machines/:machineId` | Bearer | `200` machine |
+| `PATCH` | `/api/machines/:machineId` | Bearer | `200` machine |
+| `DELETE` | `/api/machines/:machineId` | Bearer | `204` |
+| `POST` | `/api/machines/:machineId/baselines` | Bearer | `201` baseline (multipart `audio`) |
+| `GET` | `/api/machines/:machineId/baselines` | Bearer | `200` baselines |
+| `POST` | `/api/machines/:machineId/inspections` | Bearer | `201` health card (multipart `audio`) |
+| `GET` | `/api/machines/:machineId/inspections` | Bearer | `200` inspections |
+
+`422` carries an actionable reason straight from the AI quality gate — an audio
+clip that is too quiet, too short, or too clipped — or from the backend when a
+machine has no baseline yet. Show its `error` text to the operator verbatim.
+
+`KALIBRASI_KURANG` is **not** an error. It arrives as `201` with a full health
+card whose `reason` explains what to re-record.
 
 Success bodies are `{"data": ...}`. Failures are `{"error": "...", "fields": {...}}`,
 where `fields` appears only on validation errors:

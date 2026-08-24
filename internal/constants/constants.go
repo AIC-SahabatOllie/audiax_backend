@@ -80,7 +80,10 @@ const (
 	DefaultCORSOrigins     = "*"
 
 	// A cold CPU forward pass over ~119 calibration windows dominates this.
-	DefaultAITimeout     = 120 * time.Second
+	// Measured ~1.24s/window on the dockerized service (4 CPU / 4G limit), so
+	// ~119 windows alone is already ~148s -- 120s was cutting a real 2-minute
+	// calibration recording close. 240s leaves headroom for a colder cache.
+	DefaultAITimeout     = 240 * time.Second
 	DefaultStorageBucket = "audiax-audio"
 )
 
