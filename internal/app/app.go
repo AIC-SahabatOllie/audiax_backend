@@ -50,17 +50,22 @@ func New(deps Dependencies) *fiber.App {
 
 	userRepository := repository.NewUserRepository()
 	sessionRepository := repository.NewSessionRepository(deps.Redis)
+	machineRepository := repository.NewMachineRepository()
 
 	userUseCase := usecase.NewUserUseCase(
 		deps.DB, deps.Log, config.NewValidator(),
 		userRepository, sessionRepository,
 		cfg.SessionTTL, cfg.BcryptCost,
 	)
+	machineUseCase := usecase.NewMachineUseCase(
+		deps.DB, deps.Log, config.NewValidator(), machineRepository,
+	)
 
 	routes := route.RouteConfig{
-		App:            app,
-		UserController: deliveryhttp.NewUserController(userUseCase),
-		AuthMiddleware: middleware.NewAuth(userUseCase),
+		App:               app,
+		UserController:    deliveryhttp.NewUserController(userUseCase),
+		MachineController: deliveryhttp.NewMachineController(machineUseCase),
+		AuthMiddleware:    middleware.NewAuth(userUseCase),
 	}
 	routes.Setup()
 
