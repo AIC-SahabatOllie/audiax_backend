@@ -55,6 +55,7 @@ func New(deps Dependencies) *fiber.App {
 	inspectionRepository := repository.NewInspectionRepository()
 	aiService := config.NewAIService(cfg.AIServiceURL, cfg.AITimeout)
 	objectStore := config.NewObjectStore(cfg.SupabaseURL, cfg.SupabaseServiceKey, cfg.StorageBucket, constants.StorageTimeout)
+	llmService := config.NewLLMService(cfg.OllamaURL, constants.OllamaModelName, cfg.AdvisoryTimeout)
 
 	userUseCase := usecase.NewUserUseCase(
 		deps.DB, deps.Log, config.NewValidator(),
@@ -73,6 +74,11 @@ func New(deps Dependencies) *fiber.App {
 		machineRepository, baselineRepository, inspectionRepository,
 		aiService, objectStore,
 	)
+	advisoryUseCase := usecase.NewAdvisoryUseCase(
+		deps.DB, deps.Log, config.NewValidator(),
+		machineRepository, baselineRepository, inspectionRepository,
+		llmService, cfg.AdvisoryTimeout,
+	)
 
 	routes := route.RouteConfig{
 		App:                  app,
@@ -80,6 +86,7 @@ func New(deps Dependencies) *fiber.App {
 		MachineController:    deliveryhttp.NewMachineController(machineUseCase),
 		BaselineController:   deliveryhttp.NewBaselineController(baselineUseCase),
 		InspectionController: deliveryhttp.NewInspectionController(inspectionUseCase),
+		AdvisoryController:   deliveryhttp.NewAdvisoryController(advisoryUseCase),
 		AuthMiddleware:       middleware.NewAuth(userUseCase),
 	}
 	routes.Setup()

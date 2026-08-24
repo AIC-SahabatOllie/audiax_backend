@@ -23,6 +23,10 @@ import (
 type InspectionRepository interface {
 	Create(db *gorm.DB, inspection *entity.Inspection) error
 	ListForMachine(db *gorm.DB, inspections *[]entity.Inspection, machineID string, limit int) error
+	// FindByIDForMachine scopes by machine_id, not just id: this is how
+	// AdvisoryUseCase confirms an inspection actually belongs to the machine
+	// the caller already proved they own, instead of trusting the client.
+	FindByIDForMachine(db *gorm.DB, inspection *entity.Inspection, id, machineID string) error
 }
 
 type InspectionUseCase struct {

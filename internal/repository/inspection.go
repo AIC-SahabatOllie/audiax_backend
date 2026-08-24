@@ -21,3 +21,10 @@ func (r *InspectionRepository) ListForMachine(db *gorm.DB, inspections *[]entity
 		Limit(limit).
 		Find(inspections).Error
 }
+
+// FindByIDForMachine scopes by machine_id in the same query, not as a
+// separate ownership check afterwards: a client cannot use this to probe for
+// the existence of another machine's inspection id.
+func (r *InspectionRepository) FindByIDForMachine(db *gorm.DB, inspection *entity.Inspection, id, machineID string) error {
+	return db.Where("id = ? and machine_id = ?", id, machineID).Take(inspection).Error
+}

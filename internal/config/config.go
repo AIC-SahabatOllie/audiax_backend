@@ -35,6 +35,9 @@ type Config struct {
 	AIServiceURL string
 	AITimeout    time.Duration
 
+	OllamaURL       string
+	AdvisoryTimeout time.Duration
+
 	SupabaseURL        string
 	SupabaseServiceKey string
 	StorageBucket      string
@@ -71,6 +74,12 @@ func Load() (*Config, error) {
 		// never produces a double slash.
 		AIServiceURL: strings.TrimRight(os.Getenv("AI_SERVICE_URL"), "/"),
 		AITimeout:    envDuration("AI_TIMEOUT", constants.DefaultAITimeout),
+
+		// Unlike AIServiceURL, not required at startup: the advisory feature
+		// must stay up (and answer with source: "fallback_static") even when
+		// Ollama is not configured or not reachable yet (DESIGN.md decision 8).
+		OllamaURL:       strings.TrimRight(env("OLLAMA_URL", constants.DefaultOllamaURL), "/"),
+		AdvisoryTimeout: envDuration("ADVISORY_TIMEOUT", constants.DefaultAdvisoryTimeout),
 
 		SupabaseURL:        strings.TrimRight(os.Getenv("SUPABASE_URL"), "/"),
 		SupabaseServiceKey: os.Getenv("SUPABASE_SERVICE_KEY"),

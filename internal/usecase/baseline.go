@@ -26,6 +26,12 @@ type BaselineRepository interface {
 	DeactivateAllForMachine(db *gorm.DB, machineID string) error
 	ListForMachine(db *gorm.DB, baselines *[]entity.Baseline, machineID string) error
 	UpdateAudioPath(db *gorm.DB, baselineID, path string) error
+	// FindByID is how AdvisoryUseCase joins calibration_quality: an
+	// inspection references the specific baseline it was scored against
+	// (inspections.baseline_id), which is not always the currently active
+	// one (jebakan #2 -- calibration_quality has no column of its own on
+	// inspections). Already satisfied by the embedded generic Repository.
+	FindByID(db *gorm.DB, baseline *entity.Baseline, id any) error
 }
 
 // AIService is the stateless inference service in ../audiax_model. Declared

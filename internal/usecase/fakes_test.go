@@ -151,6 +151,16 @@ func (f *fakeBaselineRepo) ListForMachine(_ *gorm.DB, baselines *[]entity.Baseli
 	return nil
 }
 
+func (f *fakeBaselineRepo) FindByID(_ *gorm.DB, baseline *entity.Baseline, id any) error {
+	for _, row := range f.rows {
+		if row.ID == id.(string) {
+			*baseline = *row
+			return nil
+		}
+	}
+	return gorm.ErrRecordNotFound
+}
+
 func (f *fakeBaselineRepo) UpdateAudioPath(_ *gorm.DB, baselineID, path string) error {
 	for _, row := range f.rows {
 		if row.ID == baselineID {
@@ -230,4 +240,32 @@ func (f *fakeInspectionRepo) ListForMachine(_ *gorm.DB, inspections *[]entity.In
 		}
 	}
 	return nil
+}
+
+func (f *fakeInspectionRepo) FindByIDForMachine(_ *gorm.DB, inspection *entity.Inspection, id, machineID string) error {
+	for _, row := range f.rows {
+		if row.ID == id && row.MachineID == machineID {
+			*inspection = *row
+			return nil
+		}
+	}
+	return gorm.ErrRecordNotFound
+}
+
+// --- LLM provider ----------------------------------------------------------
+
+type fakeLLMProvider struct {
+	completion string
+	err        error
+	gotPrompt  string
+	calls      int
+}
+
+func (f *fakeLLMProvider) Complete(_ context.Context, prompt string) (string, error) {
+	f.calls++
+	f.gotPrompt = prompt
+	if f.err != nil {
+		return "", f.err
+	}
+	return f.completion, nil
 }
