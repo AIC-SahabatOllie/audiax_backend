@@ -151,3 +151,28 @@ const (
 
 // InspectionHistoryLimit caps how many inspections one history request returns.
 const InspectionHistoryLimit = 100
+
+// Advisory layer ("Teknisi Saku"): the language-model advisory that explains
+// a HealthCard and answers operator follow-up questions. See
+// internal/advisory/PROMPT_CONTRACT.md for the prompt contract this bounds.
+const (
+	// AdvisoryMaxHistoryTurns caps how many trailing conversation turns are
+	// rendered into the prompt. Must match prompt_template.txt's render rules
+	// exactly: the same template is used to build training corpus (Track B)
+	// and to serve (Track A), and a mismatch here is a silent train/serve skew.
+	AdvisoryMaxHistoryTurns = 8
+)
+
+// AdvisoryForbiddenDiagnosisPhrases fails guard.go's diagnosis check
+// (DESIGN.md §4.2) when any appears in an LLM completion, case-insensitively.
+// This tool triages; it never names a fault or a root cause.
+var AdvisoryForbiddenDiagnosisPhrases = []string{
+	"bearing aus",
+	"bearing rusak",
+	"impeler pecah",
+	"motor terbakar",
+	"kerusakan pada",
+	"disebabkan oleh",
+	"sisa umur",
+	"akan rusak dalam",
+}
