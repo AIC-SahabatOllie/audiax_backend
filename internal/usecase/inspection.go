@@ -102,6 +102,20 @@ func (u *InspectionUseCase) Inspect(ctx context.Context, request *model.InspectM
 		InspectedAt:       time.Now().UTC(),
 	}
 
+	// A missing dominant_indicator on an anomalous inspection means this
+	// baseline's notes have no dsp_stats -- almost always because it was
+	// calibrated before ai/__init__.py started computing them, not a
+	// transient scoring failure. It silently degrades Teknisi Saku: the LLM
+	// gets no indicator to explain and falls back to generic safety language
+	// for any question about it (observed in production, 2026-08-25). This
+	// is the only place that failure is visible before it reaches a user as
+	// a confusing answer, so it is logged even though nothing here can fix a
+	// stale baseline -- only recalibrating the machine can.
+	if (card.Status == constants.StatusWarning || card.Status == constants.StatusCritical) && card.DominantIndicator == nil {
+		u.log.WarnContext(ctx, "anomalous inspection has no dominant_indicator -- baseline likely predates dsp_stats, recalibrate this machine",
+			"machine_id", machine.ID, "baseline_id", baseline.ID, "status", card.Status)
+	}
+
 	// Only anomalous clips are kept, as evidence for whoever follows up. A
 	// NORMAL clip is never re-inferred, so storing it buys nothing and costs
 	// both money and privacy exposure (docs/prd.md FR10).
