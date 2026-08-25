@@ -176,6 +176,17 @@ const (
 // AdvisoryForbiddenDiagnosisPhrases fails guard.go's diagnosis check
 // (DESIGN.md §4.2) when any appears in an LLM completion, case-insensitively.
 // This tool triages; it never names a fault or a root cause.
+//
+// "sisa umur" / "akan rusak dalam" / "memprediksi umur" all guard the same
+// thing: the model must never engage in lifespan-prediction talk, whether
+// it's fabricating a number or just refusing to. A real production case
+// slipped past the first two: asked a direct safety question ("masih aman
+// dipakai?") on a CRITICAL machine, the model opened with "Sistem tidak bisa
+// memprediksi umur mesin atau umur pabrik" -- a non-sequitur borrowed from
+// its pancingan_angka refusal register, deployed on a question that was
+// never about lifespan at all. Rejecting it outright and falling back to
+// StaticReply is the conservative choice even when the phrase would have
+// been a legitimate refusal in a different conversation.
 var AdvisoryForbiddenDiagnosisPhrases = []string{
 	"bearing aus",
 	"bearing rusak",
@@ -185,6 +196,7 @@ var AdvisoryForbiddenDiagnosisPhrases = []string{
 	"disebabkan oleh",
 	"sisa umur",
 	"akan rusak dalam",
+	"memprediksi umur",
 }
 
 // Advisory LLM client (Ollama) and response contract, mirroring DESIGN.md §3.6.
