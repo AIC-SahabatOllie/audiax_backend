@@ -1,6 +1,7 @@
 MIGRATE_URL ?= $(DATABASE_URL)
 
-.PHONY: run build test test-race lint tidy migrate-up migrate-down migrate-new docker
+.PHONY: run build test test-race lint tidy migrate-up migrate-down migrate-new docker \
+        ollama-model compose-build compose-up compose-down
 
 run:
 	go run ./cmd/web
@@ -34,3 +35,17 @@ migrate-new:
 
 docker:
 	docker build -t audiax-backend .
+
+# Stages the fine-tuned advisory GGUF from ../audiax_model into ollama/model/.
+# Required before compose-build / compose-up; see scripts/prepare_ollama_model.sh.
+ollama-model:
+	bash scripts/prepare_ollama_model.sh
+
+compose-build: ollama-model
+	docker compose build
+
+compose-up: ollama-model
+	docker compose up -d
+
+compose-down:
+	docker compose down

@@ -7,6 +7,10 @@ bin/
 *.test
 coverage.out
 
+# Advisory model artifact -- 261 MB, regenerated from audiax_model via
+# scripts/prepare_ollama_model.sh, never committed here.
+ollama/model/
+
 .idea/
 .vscode/
 .DS_Store

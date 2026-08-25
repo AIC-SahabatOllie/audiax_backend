@@ -1,0 +1,41 @@
+services:
+  ollama:
+    build:
+      context: ./ollama
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list | grep -q audiax-advisor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    ports:
+      # Bound to loopback only: a host-run `go run ./cmd/web` (OLLAMA_URL=
+      # http://localhost:11434 in .env) needs this to reach the container.
+      # The `backend` service below never uses this -- it stays on the
+      # compose network at http://ollama:11434 regardless of this mapping.
+      - "127.0.0.1:11434:11434"
+    # No volumes: the model is baked into the image at build time
+    # (ollama/Dockerfile). A bind mount over /root/.ollama here would shadow
+    # that baked model on first boot -- the exact bug the AI repo's
+    # docker-compose.yml hit with its checkpoint (see its docs/PROGRESS.md).
+
+  backend:
+    build:
+      context: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # .env's OLLAMA_URL defaults to http://localhost:11434 for `make run`
+      # against a host-installed Ollama; inside this compose network that
+      # address doesn't resolve, so it must be overridden to the service name.
+      OLLAMA_URL: http://ollama:11434
+      AI_SERVICE_URL: http://host.docker.internal:8000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "3000:3000"
+    depends_on:
+      ollama:
+        condition: service_healthy
