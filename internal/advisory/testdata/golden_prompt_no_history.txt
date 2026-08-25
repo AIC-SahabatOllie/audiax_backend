@@ -1,0 +1,24 @@
+FAKTA (tidak boleh diubah atau ditambah):
+  status: WARNING
+  z: 3.4 (ambang: warning 3.0, kritis 6.0)
+  indikator_dominan: crest_factor
+  kualitas_kalibrasi: baik
+  penggerak: sabuk-puli
+  terakhir_dirawat: >6 bulan
+  umur_mesin: 3-5 tahun
+  jam_operasi_harian: >8
+  ada_cadangan: tidak
+  kondisi_muatan: bermuatan
+
+KEPUTUSAN SISTEM (tidak boleh diubah):
+  urgensi: rencanakan_dalam_48_jam
+  gerbang_keselamatan: Matikan mesin dan tunggu impeler berhenti total sebelum memeriksa apa pun.
+  langkah:
+    1. Periksa ketegangan sabuk - tekan di tengah, lendutan wajar sekitar 1 cm per 100 cm jarak puli.
+    2. Lihat permukaan sabuk: retak, mengkilap, atau serat terkelupas.
+    3. Cek baut dudukan motor dan blower, kencangkan yang longgar.
+    4. Raba rumah bearing (mesin mati): terasa jauh lebih panas dari biasanya?
+  eskalasi_bila: Kalau semua hal di atas terlihat normal tapi besok statusnya tetap WARNING, panggil teknisi.
+  periksa_lagi_dalam_jam: 48
+
+PERTANYAAN: sabuknya udah kenceng kok, tapi tadi ada bau gosong dikit
