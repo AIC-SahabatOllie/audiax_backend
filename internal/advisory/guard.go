@@ -69,11 +69,22 @@ func Guard(raw string, cell Cell, allowedNumbers []float64) (Reply, error) {
 		return Reply{}, errors.New("guard: keselamatan: output must instruct shutting the machine down before inspecting it")
 	}
 
+	// NeedsTechnician and Escalated come from cell and the deterministic
+	// keyword check upstream, never from the model's own perlu_teknisi /
+	// eskalasi claims. Those two fields are decisions, and DESIGN.md decision
+	// 6 is unambiguous that the model never makes decisions -- it only
+	// explains ones the rule engine already made. static.go's StaticReply
+	// already follows this (see its comment on Escalated); a raw LLM
+	// completion that answers a completely benign question ("apa artinya
+	// indikator ini?") can still self-report eskalasi:true, and trusting it
+	// puts a false "HENTIKAN MESIN" alarm in front of the operator for no
+	// reason -- exactly the kind of cry-wolf failure that erodes trust in the
+	// real alarm.
 	return Reply{
 		Answer:          out.Jawaban,
 		NextStep:        out.LangkahBerikutnya,
-		NeedsTechnician: out.PerluTeknisi,
-		Escalated:       out.Eskalasi,
+		NeedsTechnician: cell.NeedsTechnician,
+		Escalated:       false,
 	}, nil
 }
 

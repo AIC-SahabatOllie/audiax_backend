@@ -1,0 +1,35 @@
+FROM ./audiax-advisor-q4km.gguf
+
+# Without an explicit TEMPLATE, Ollama falls back to a bare `{{ .Prompt }}`
+# passthrough -- no <start_of_turn> markers, no SYSTEM text. The model was
+# never trained on that shape of input: train_lora.py builds every example as
+# `SYSTEM + "\n\n" + prompt` wrapped in Gemma's chat template
+# (merged_e60/chat_template.jinja renders that as
+# "<start_of_turn>user\n{content}<end_of_turn>\n<start_of_turn>model\n"), and
+# eval_advisory.py -- the script that produced the 73/73 JSON numbers in
+# results.md -- does the same. Serving without this reproduces none of that,
+# and the model answers as its un-tuned self: plausible prose, not JSON.
+#
+# SYSTEM below is copied verbatim from train_lora.py's SYSTEM constant. If one
+# changes, the other must too, or this model is being served on a prompt shape
+# it was never trained on again.
+SYSTEM """Kamu asisten pemeliharaan mesin blower untuk operator UMKM. Jawab dalam Bahasa Indonesia sederhana. Jangan pernah menyebut angka yang tidak ada di FAKTA atau KEPUTUSAN SISTEM. Jangan menyebut jenis kerusakan. Balas HANYA JSON dengan kunci: "jawaban", "langkah_berikutnya", "perlu_teknisi" (boolean), "eskalasi" (boolean)."""
+
+TEMPLATE """<start_of_turn>user
+{{ if .System }}{{ .System }}
+
+{{ end }}{{ .Prompt }}<end_of_turn>
+<start_of_turn>model
+"""
+
+# Deterministic generation: DESIGN.md §6's determinism metric ("2x run
+# identical" on the same input) only means something if these are pinned, not
+# left to whatever Ollama's own defaults happen to be. These parameters are a
+# safety net for anyone who talks to the model outside our Go client --
+# internal/config/llmservice.go already sends the same options on every
+# request, and those take precedence over what's baked in here.
+PARAMETER temperature 0
+PARAMETER top_k 1
+PARAMETER top_p 1
+PARAMETER seed 42
+PARAMETER num_predict 220

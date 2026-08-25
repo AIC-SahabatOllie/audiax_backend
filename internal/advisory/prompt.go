@@ -54,6 +54,51 @@ type PromptInput struct {
 
 var placeholderPattern = regexp.MustCompile(`\{(\w+)\}`)
 
+// driveLabel, recencyLabel and ageLabel humanise the enum codes that arrive
+// from the decision table and the database before they reach the prompt.
+//
+// These are not cosmetic. The training corpus was generated with exactly these
+// substitutions (gen_corpus.py: DRIVE_LABEL / RECENCY_LABEL / AGE_LABEL), so a
+// model that saw "penggerak: sabuk-puli" throughout training would meet an
+// unseen token if production sent the raw code "belt". That is train/serve skew
+// of the worst kind: nothing errors, the output just quietly degrades. Any new
+// code added to decision_table.json must be added here AND to the Python map in
+// the same commit.
+//
+// Urgency is deliberately NOT humanised on either side -- the corpus carries
+// "urgensi: rencanakan_dalam_48_jam" verbatim from the decision table.
+var (
+	driveLabel = map[string]string{
+		"belt":           "sabuk-puli",
+		"direct-coupled": "kopling langsung",
+		"direct-drive":   "direct-drive",
+	}
+	recencyLabel = map[string]string{
+		"<1bln":      "<1 bulan",
+		"1-6bln":     "1-6 bulan",
+		">6bln":      ">6 bulan",
+		"tidak-tahu": "tidak tahu",
+	}
+	ageLabel = map[string]string{
+		"<1th":  "<1 tahun",
+		"1-3th": "1-3 tahun",
+		"3-5th": "3-5 tahun",
+		">5th":  ">5 tahun",
+	}
+)
+
+// humanise maps a code to its corpus-facing label, passing unknown values
+// through unchanged. Pass-through rather than panic: an unrecognised code is a
+// data problem that should degrade one field, not take down a request. The
+// tests assert every code the decision table actually uses is covered, so a
+// gap fails in CI rather than in front of an operator.
+func humanise(labels map[string]string, code string) string {
+	if label, ok := labels[code]; ok {
+		return label
+	}
+	return code
+}
+
 // omittableIfEmpty is PROMPT_CONTRACT.md rule 2: a line whose only nullable
 // placeholder is empty is dropped entirely, never written with "null" or left
 // blank.
@@ -109,9 +154,9 @@ func scalarValues(in PromptInput) map[string]string {
 		"z_critical":          formatFloat1(in.ZCriticalThreshold),
 		"dominant_indicator":  in.DominantIndicator,
 		"calibration_quality": in.CalibrationQuality,
-		"drive_type":          in.DriveType,
-		"recency":             in.Recency,
-		"machine_age":         in.MachineAge,
+		"drive_type":          humanise(driveLabel, in.DriveType),
+		"recency":             humanise(recencyLabel, in.Recency),
+		"machine_age":         humanise(ageLabel, in.MachineAge),
 		"hours_per_day":       in.HoursPerDay,
 		"has_backup":          formatYaTidak(in.HasBackup),
 		"load_state":          in.LoadState,

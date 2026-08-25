@@ -1,0 +1,24 @@
+FAKTA (tidak boleh diubah atau ditambah):
+  status: {status}
+  z: {z} (ambang: warning {z_warning}, kritis {z_critical})
+  indikator_dominan: {dominant_indicator}
+  kualitas_kalibrasi: {calibration_quality}
+  penggerak: {drive_type}
+  terakhir_dirawat: {recency}
+  umur_mesin: {machine_age}
+  jam_operasi_harian: {hours_per_day}
+  ada_cadangan: {has_backup}
+  kondisi_muatan: {load_state}
+
+KEPUTUSAN SISTEM (tidak boleh diubah):
+  urgensi: {urgency}
+  gerbang_keselamatan: {safety_gate}
+  langkah:
+{checklist}
+  eskalasi_bila: {escalate_if}
+  periksa_lagi_dalam_jam: {recheck_hours}
+
+RIWAYAT:
+{history}
+
+PERTANYAAN: {user_message}
