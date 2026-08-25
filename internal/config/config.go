@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"fmt"
 	"log/slog"
 	"os"
 	"strconv"
@@ -51,8 +50,10 @@ type Config struct {
 
 func Load() (*Config, error) {
 	// .env is for local development only; real deployments inject env vars directly.
-	if err := godotenv.Load(); err != nil && !os.IsNotExist(err) {
-		return nil, fmt.Errorf("load .env: %w", err)
+	for _, envPath := range []string{".env", "../../.env"} {
+		if err := godotenv.Load(envPath); err == nil {
+			break
+		}
 	}
 
 	cfg := &Config{
